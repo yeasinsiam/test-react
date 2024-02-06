@@ -51,7 +51,7 @@ const useFromValidation = (values, validationRules, initialValue) => {
 
   const isError = useMemo(() => {
     for (const key in errors) {
-      return errors[key].length;
+      return Boolean(errors[key].length);
     }
   }, [errors]);
 

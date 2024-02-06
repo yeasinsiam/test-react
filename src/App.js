@@ -68,6 +68,8 @@ function App() {
     form.setFieldValue("address", record.address);
   };
 
+  console.log(form);
+
   return (
     <div>
       <table className="table">
@@ -110,6 +112,13 @@ function App() {
           className="form-control"
           placeholder="Name"
         />
+        {Boolean(form.errors.name.length) &&
+          form.errors.name.map((err) => (
+            <div key={err.type} className="alert alert-danger">
+              {err.msg}
+            </div>
+          ))}
+
         <br />
         <input
           type="text"
@@ -118,6 +127,12 @@ function App() {
           className="form-control"
           placeholder="Address"
         />
+        {Boolean(form.errors.address.length) &&
+          form.errors.address.map((err) => (
+            <div key={err.type} className="alert alert-danger">
+              {err.msg}
+            </div>
+          ))}
         <br />
         <div className="d-flex gap-2">
           <button className="btn btn-primary mt-1">

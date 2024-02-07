@@ -68,7 +68,7 @@ function App() {
     form.setFieldValue("address", record.address);
   };
 
-  console.log(form);
+  console.log(form.isError);
 
   return (
     <div>

@@ -18,6 +18,7 @@ export default function useForm(
       oldValues[fieldName] = fieldValue;
       return oldValues;
     });
+    if (!fieldValue) validateFields();
   };
 
   const resetFieldValues = (fieldName, fieldValue) => {
@@ -26,6 +27,7 @@ export default function useForm(
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    // console.log(validateFields());
     if (validateFields()) afterSubmitHandler(values);
   };
 
@@ -48,12 +50,13 @@ const useFromValidation = (values, validationRules, initialValue) => {
     return obj;
   }, []);
   const [errors, setErrors] = useState(initialErrorFormatField);
+  const [isError, setIsError] = useState(false);
 
-  const isError = useMemo(() => {
-    for (const key in errors) {
-      return Boolean(errors[key].length);
-    }
-  }, [errors]);
+  // const isError = useMemo(() => {
+  //   for (const key in errors) {
+  //     return Boolean(errors[key].length);
+  //   }
+  // }, [errors]);
 
   const setError = (fieldName, msg, type) => {
     if (!errors[fieldName].find((err) => err.type === type))
@@ -79,11 +82,14 @@ const useFromValidation = (values, validationRules, initialValue) => {
   };
 
   const validateFields = () => {
+    let isValidFormFields = true;
+
     // const validateVar = validate();
     for (const key in validationRules) {
       if (Object.hasOwnProperty.call(validationRules, key)) {
         const elementValidationRules = validationRules[key];
 
+        // eslint-disable-next-line no-loop-func
         elementValidationRules.forEach((validationRule) => {
           // validateVar["required"];
           switch (validationRule) {
@@ -94,6 +100,7 @@ const useFromValidation = (values, validationRules, initialValue) => {
                   key.charAt(0).toUpperCase() + key.slice(1) + " is required",
                   "required"
                 );
+                isValidFormFields = false;
               } else {
                 removeError(key, "required");
               }
@@ -106,7 +113,8 @@ const useFromValidation = (values, validationRules, initialValue) => {
         });
       }
     }
-    return false;
+    setIsError(!isValidFormFields);
+    return isValidFormFields;
   };
 
   return { isError, errors, validateFields };
